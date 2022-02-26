@@ -1,11 +1,18 @@
 import React from 'react'
 
 import { StyleSheet, View, Dimensions } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Callout } from 'react-native-maps';
 
 import { merchant } from '../../models'
 
-export default function App() {
+import { StackScreenProps } from '@react-navigation/stack';
+
+type Params = {
+    Merchant: {
+        id: number
+    }
+}
+export default ({ navigation }: StackScreenProps<Params>) => {
     const [ data, setData ] = React.useState<merchant[]>([])
 
     React.useEffect(() => {
@@ -15,8 +22,8 @@ export default function App() {
                 name: "Pak Sutomo",
                 description: "Ketoprak",
                 coordinate: {
-                    longitude: -0.0877321,
-                    latitude: 51.5078788,
+                    longitude: 107.594,
+                    latitude: -6.904
                 }
             },
             {
@@ -24,8 +31,8 @@ export default function App() {
                 name: "Pak Bowo",
                 description: "Sol Sepatu",
                 coordinate: {
-                    latitude: 37.78825,
-                    longitude: -122.4324
+                    longitude: 107.6067742,
+                    latitude: -6.9171595
                 }
             },
             {
@@ -55,14 +62,18 @@ export default function App() {
                     data.map((merchant) => {
                         return(
                             <Marker
-                                key={merchant.merchant_id}
+                                key={merchant.merchant_id.toString()}
                                 coordinate={{
                                     latitude: merchant.coordinate.latitude,
                                     longitude: merchant.coordinate.longitude
                                 }}
                                 title={merchant.name}
                                 description={merchant.description}
-                            />
+                            >
+                                <Callout onPress={() => {
+                                    navigation.navigate('Merchant', { id: merchant.merchant_id })
+                                }}/>
+                            </Marker>
                         )
                     })
                 }
